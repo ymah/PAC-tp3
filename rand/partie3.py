@@ -38,5 +38,5 @@ next=invRand(tabIV['IV'][0])
 
 
 
-print(next)
-print(rand(next))
+print("rand : "+str(rand(next)))
+print("next correspondant : "+str(next))
