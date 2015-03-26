@@ -23,7 +23,7 @@ def modinv(a, m):
 
 
 
-#tP
+#TP
 
 NOM='yaker'
 URL='http://pac.bouillaguet.info/TP3'
@@ -37,7 +37,9 @@ parametre='parameters/'+NOM
 
 signer='sign/'+NOM
 
+url_validate='validate/'+NOM
 PK_url='PK/'+NOM
+
 PK_dic = server.query(url=URL_PARTIE+PK_url)
 
 
@@ -47,24 +49,34 @@ g=PK_dic['g']
 
 
 
-m1=12345
+m0=91097 #randint(1000,100000)
+
+s_m0 = server.query(url=URL_PARTIE+signer,parameters={'m':m0})
+r0 = s_m0['signature'][0]
+s0 = s_m0['signature'][1]
+
+m1=63934 #randint(1000,100000)
+
 s_m1 = server.query(url=URL_PARTIE+signer,parameters={'m':m1})
 r1 = s_m1['signature'][0]
 s1 = s_m1['signature'][1]
 
+q = p - 1
+m0_m1 = (m0 - m1) % q
+s0_s1 = modinv(s0 - s1,q)
+k = (((m0_m1 % q) * (s0_s1 % q))% q) % p
 
-m2=67890
-s_m2 = server.query(url=URL_PARTIE+signer,parameters={'m':m2})
-r2 = s_m2['signature'][0]
-s2 = s_m2['signature'][1]
-
-
-
-def getK(m1,m2,s1,s2,p):
-    a = (m1 - m2)%p
-    b = (s1 - s2)%p
-
-    return (a/b) % (p - 1)
+k_1 = modinv(k,q)
 
 
-print(getK(m1,m2,s1,s2,p))
+inv_r = modinv(r0,q)
+
+a = (s0 % q) * (k % q ) % q
+b =  (a % q) - (m0 % q) % q
+x = (b % q) * (inv_r ) % q
+
+
+
+res = server.query(url=URL_PARTIE+url_validate,parameters={'x':x})
+
+print(res)
