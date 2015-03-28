@@ -9,10 +9,13 @@ def extended_gcd(aa, bb):
     lastremainder, remainder = abs(aa), abs(bb)
     x, lastx, y, lasty = 0, 1, 1, 0
     while remainder:
-        lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
+        lastremainder, (quotient, remainder) = remainder, \
+                                               divmod(lastremainder,\
+                                                      remainder)
         x, lastx = lastx - quotient*x, x
         y, lasty = lasty - quotient*y, y
-    return lastremainder, lastx * (-1 if aa < 0 else 1), lasty * (-1 if bb < 0 else 1)
+    return lastremainder, lastx * (-1 if aa < 0 else 1), \
+        lasty * (-1 if bb < 0 else 1)
 
 def modinv(a, m):
     g, x, y = extended_gcd(a, m)
@@ -62,21 +65,21 @@ r1 = s_m1['signature'][0]
 s1 = s_m1['signature'][1]
 
 q = p - 1
-m0_m1 = (m0 - m1) % q
-s0_s1 = modinv(s0 - s1,q)
-k = (((m0_m1 % q) * (s0_s1 % q))% q) % p
+m0_m1 = (m0 - m1)
+s0_s1 = s0 - s1
+inv_s0_s1=modinv(s0_s1,q)
 
-k_1 = modinv(k,q)
+k=(inv_s0_s1 % q)*(m0_m1 % q) % q
+
 
 
 inv_r = modinv(r0,q)
 
-a = (s0 % q) * (k % q ) % q
-b =  (a % q) - (m0 % q) % q
-x = (b % q) * (inv_r ) % q
 
-
-
+a = (m0 % q)*(inv_r % q) % q
+b = (k * s0)
+c = (b % q)*(inv_r % q) % q
+x = (a - c) % q
 res = server.query(url=URL_PARTIE+url_validate,parameters={'x':x})
 
 print(res)
