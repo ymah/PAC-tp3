@@ -16,27 +16,36 @@ URL_PARTIE='/rand/'
 challenge='challenge/'+NOM
 
 
-tabIV=server.query(url=URL_PARTIE+challenge)
+challengeData=server.query(url=URL_PARTIE+challenge)
 
+
+tabIV=challengeData['IV']
 print(tabIV)
 
+
+def partie1(n):
+    return n * 1103515245 + 12345
+
+
+def partie2(n):
+    return floor((n/65536) % 32768)
+
+
+
 def rand(n):
-    next = n * 1103515245 + 12345
-    return floor((next/65536) % 32768)
+    next = partie1(n)
+    return partie2(next)
 
 
 def invRand(n):
     res = 0
     i = 0
-    while res != n:
-        res = i % 32768
-        i+=1
-    res *= 65536
-    return ((res - 12345)/ 1103515245)
-
-next=invRand(tabIV['IV'][0])
+    while rand(i) != n:
+        i+= 1
+    return i
 
 
+next=invRand(tabIV[1])
 
-print("rand : "+str(rand(next)))
-print("next correspondant : "+str(next))
+print(next)
+print(rand(next))
