@@ -14,7 +14,7 @@ URL_PARTIE='/rand/'
 
 
 challenge='challenge/'+NOM
-solution = 'prediction/'+NOM
+solution = 'validation/'+NOM
 
 
 challengeData=server.query(url=URL_PARTIE+challenge)
@@ -46,30 +46,16 @@ def invRand(n):
     return i
 
 
-def getNextp(n):
-    a = 1103515245
-    b = 12345
-    return a * n + b % pow(2,32)
+next5 = invRand(tabIV[1])
+next4 = invRand(tabIV[0])
+
+print(next5)
+print(next4)
+print(rand(partie1(next4)))
+# dicSol={'key':[key0,key1,key2,key3]}
 
 
 
-key3 = rand(getNextp(invRand(tabIV[0])))
-print(key3)
+# res =server.query(url=URL_PARTIE+solution,parameters=dicSol)
 
-key2 = rand(getNextp(invRand(key3)))
-print(key2)
-
-key1 = rand(getNextp(invRand(key2)))
-print(key1)
-
-key0 = rand(getNextp(invRand(key1)))
-print(key0)
-
-
-dicSol={'key':[key0,key1,key2,key3]}
-
-
-
-res =server.query(url=URL_PARTIE+solution,parameters=dicSol)
-
-print(res)
+# print(res)
