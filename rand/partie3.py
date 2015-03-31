@@ -2,7 +2,7 @@ from client import *
 from random import randint
 from math import *
 from ctypes import c_uint32
-
+import sys
 
 NOM='yaker'
 URL='http://pac.bouillaguet.info/TP3'
@@ -47,7 +47,8 @@ def invRand(n):
     l = 0
     res = 0
     next = 0
-    print("Demarage...")
+    # print("Demarage")
+    # print("En cours",end="")
     while res != n:
         if test == 0:
             next = pow(2,16)*u + l
@@ -59,24 +60,34 @@ def invRand(n):
             test = 0
         res = (next/pow(2,16))% pow(2,15)
         res = floor(res)
-    print("fin")
-    return u,l
+#    print("\nfin")
+    return u,l,floor(next)
 
-def getNextPrime(n):
+def getPreviousNext(n):
     a = 1103515245
     b = 12345
     int1 = n - b
-    int2 = (int1 % pow(2,32))*(modinv(a,pow(2,32)))%pow(2,32)
+    int2 = int1 / a
     return int2
+def rand(n):
+    a = 1103515245
+    b = 12345
+    next = a*n + b
+    return (floor(next/65536) % 32768)
 
-u,l = invRand(tabIV[1])
-print("\n")
-next = pow(2,16)*u + l
-nextp = getNextPrime(next)
-print(nextp)
-res = (floor(nextp/pow(2,15))% pow(2,16))
-print(tabIV[0])
-print(floor(res))
+
+
+u,l,next = invRand(tabIV[1])
+
+print(next)
+p = getPreviousNext(next)
+
+print(rand(p))
+key3 = (ceil(p)/65536) % 32768
+print(floor(key3))
+
+
+
 
 # dicSol={'key':[key0,key1,key2,key3]}
 
