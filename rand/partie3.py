@@ -24,34 +24,60 @@ tabIV=challengeData['IV']
 print(tabIV)
 
 
-def partie1(n):
-    return n * 1103515245 + 12345
+def extended_gcd(aa, bb):
+    lastremainder, remainder = abs(aa), abs(bb)
+    x, lastx, y, lasty = 0, 1, 1, 0
+    while remainder:
+        lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
+        x, lastx = lastx - quotient*x, x
+        y, lasty = lasty - quotient*y, y
+    return lastremainder, lastx * (-1 if aa < 0 else 1), lasty * (-1 if bb < 0 else 1)
 
+def modinv(a, m):
+    g, x, y = extended_gcd(a, m)
+    if g != 1:
+        raise ValueError
+    return x % m
 
-def partie2(n):
-    return floor((n/65536) % 32768)
-
-
-
-def rand(n):
-    next = partie1(n)
-    return partie2(next)
 
 
 def invRand(n):
+    test = 0
+    u = 0
+    l = 0
     res = 0
-    i = 0
-    while rand(i) != n:
-        i+= 1
-    return i
+    next = 0
+    print("Demarage...")
+    while res != n:
+        if test == 0:
+            next = pow(2,16)*u + l
+            u +=1
+            test = 1
+        else:
+            next = pow(2,16)*u + l
+            l +=1
+            test = 0
+        res = (next/pow(2,16))% pow(2,15)
+        res = floor(res)
+    print("fin")
+    return u,l
 
+def getNextPrime(n):
+    a = 1103515245
+    b = 12345
+    int1 = n - b
+    int2 = (int1 % pow(2,32))*(modinv(a,pow(2,32)))%pow(2,32)
+    return int2
 
-next5 = invRand(tabIV[1])
-next4 = invRand(tabIV[0])
+u,l = invRand(tabIV[1])
+print("\n")
+next = pow(2,16)*u + l
+nextp = getNextPrime(next)
+print(nextp)
+res = (floor(nextp/pow(2,15))% pow(2,16))
+print(tabIV[0])
+print(floor(res))
 
-print(next5)
-print(next4)
-print(rand(partie1(next4)))
 # dicSol={'key':[key0,key1,key2,key3]}
 
 
